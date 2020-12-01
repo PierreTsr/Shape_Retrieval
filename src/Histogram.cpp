@@ -4,20 +4,12 @@ Histogram::Histogram(MatrixXd const& bagOfFeatures)
 {
     VectorXi words = this->computeCentroids(bagOfFeatures);
     this->computeWeights(words);
-    this->indexize();
 };
 
 void Histogram::setValue(MatrixXd const& bagOfFeatures)
 {
     VectorXi words = this->computeCentroids(bagOfFeatures);
     this->computeWeights(words);
-};
-
-void Histogram::updateIndex()
-{
-    //Remove from index if necessary
-    //TODO
-    this->indexize();
 };
 
 VectorXi Histogram::computeCentroids(MatrixXd const& bagOfFeatures)

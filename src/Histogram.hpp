@@ -17,7 +17,6 @@ public:
     Histogram() = default;
     Histogram(MatrixXd const& bagOfFeatures);
 
-    void updateIndex();
     void setValue(MatrixXd const& bagOfFeatures);
 
     double distance(Histogram const& hist2);
@@ -25,9 +24,7 @@ public:
 private:
 
     static Vocabulary &vocabulary;
-    static index &inverseIndex;
     std::map<int, double> weights;
     VectorXi computeCentroids(MatrixXd const& bagOfFeatures);
     void computeWeights(VectorXi const& bagOfWords);
-    void indexize();
 };
