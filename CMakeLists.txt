@@ -14,6 +14,6 @@ if( OpenCV_FOUND )
 endif( OpenCV_FOUND )
 
 file(GLOB SRCFILES src/*.cpp)
-add_executable(ex_bin ${SRCFILES} cmake/src/BagOfFeatures.cpp cmake/src/BagOfFeatures.h)
+add_executable(ex_bin ${SRCFILES} src/BagOfFeatures.cpp src/BagOfFeatures.h)
 
 target_link_libraries(ex_bin igl::core igl::opengl_glfw)
