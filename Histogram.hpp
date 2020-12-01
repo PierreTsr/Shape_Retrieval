@@ -20,7 +20,7 @@ public:
     void updateIndex();
     void setValue(MatrixXd const& bagOfFeatures);
 
-    static double distance(Histogram const& hist1, Histogram const& hist2);
+    double distance(Histogram const& hist2);
 
 private:
 

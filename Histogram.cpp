@@ -2,14 +2,15 @@
 
 Histogram::Histogram(MatrixXd const& bagOfFeatures)
 {
-    MatrixXi words = this->computeCentroids(bagOfFeatures);
+    VectorXi words = this->computeCentroids(bagOfFeatures);
     this->computeWeights(words);
     this->indexize();
 };
 
 void Histogram::setValue(MatrixXd const& bagOfFeatures)
 {
-    this->computeWeights(bagOfFeatures);
+    VectorXi words = this->computeCentroids(bagOfFeatures);
+    this->computeWeights(words);
 };
 
 void Histogram::updateIndex()
@@ -66,3 +67,23 @@ void Histogram::computeWeights(VectorXi const& bagOfWords)
         weights[item.first] = item.second / bagOfWords.rows() * log(numberOfViews / vocabFrequencies(item.first));
     }
 };
+
+double Histogram::distance(Histogram const& hist2)
+{
+    double dotProduct = 0;
+    double normHist1 = 0;
+    double normHist2 = 0;
+
+    for (auto& item:this->weights)
+    {
+        normHist1 += pow(item.second, 2);
+        if (hist2.weights.find(item.first) != hist2.weights.end())
+            dotProduct += item.second * hist2.weights.at(item.first);
+    }
+    for (auto& item: hist2.weights)
+        normHist2 += pow(item.second, 2);
+    
+    normHist1 = sqrt(normHist1);
+    normHist2 = sqrt(normHist2);
+    return dotProduct / (normHist1 * normHist2);
+}
