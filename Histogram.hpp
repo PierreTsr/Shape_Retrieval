@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <math.h>
+#include "Vocabulary.hpp"
 
 using namespace Eigen;
 
@@ -9,7 +10,6 @@ class Histogram
 {
 public:
 
-    using vocabulary = MatrixXd;
     using index = std::map<int, std::vector<Histogram>>;
 
 public:
@@ -24,7 +24,7 @@ public:
 
 private:
 
-    static vocabulary &featuresVocabulary;
+    static Vocabulary &vocabulary;
     static index &inverseIndex;
     std::map<int, double> weights;
     VectorXi computeCentroids(MatrixXd const& bagOfFeatures);

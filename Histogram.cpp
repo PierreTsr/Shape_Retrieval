@@ -24,10 +24,11 @@ VectorXi Histogram::computeCentroids(MatrixXd const& bagOfFeatures)
 {
     VectorXd sqNormVoc, sqNormFeatures;
     MatrixXd allDotProducts, distanceToVoc;
+    MatrixXd featuresVocabulary = this->vocabulary.getVocabulary();
 
-    sqNormVoc = this->featuresVocabulary.rowwise().squaredNorm();
+    sqNormVoc = featuresVocabulary.rowwise().squaredNorm();
     sqNormFeatures = bagOfFeatures.rowwise().squaredNorm();
-    allDotProducts = this->featuresVocabulary * bagOfFeatures.transpose();
+    allDotProducts = featuresVocabulary * bagOfFeatures.transpose();
 
     distanceToVoc = -2*allDotProducts;
     distanceToVoc.colwise() += sqNormVoc;
@@ -59,8 +60,8 @@ void Histogram::computeWeights(VectorXi const& bagOfWords)
         }
     }
 
-    int numberOfViews;
-    VectorXd vocabFrequencies;
+    int numberOfViews = this->vocabulary.getNumberOfViews();
+    VectorXd vocabFrequencies = this->vocabulary.getFrequecies();
     this->weights = {};
     for (auto& item: rawHistogram)
     {
