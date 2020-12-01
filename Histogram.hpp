@@ -1,6 +1,7 @@
 #include <Eigen/Core>
 #include <map>
 #include <vector>
+#include <math.h>
 
 using namespace Eigen;
 
@@ -13,13 +14,20 @@ public:
 
 public:
 
+    Histogram() = default;
     Histogram(MatrixXd const& bagOfFeatures);
 
+    void updateIndex();
+    void setValue(MatrixXd const& bagOfFeatures);
+
     static double distance(Histogram const& hist1, Histogram const& hist2);
-    void indexize();
 
 private:
 
     static vocabulary &featuresVocabulary;
     static index &inverseIndex;
+    std::map<int, double> weights;
+    VectorXi computeCentroids(MatrixXd const& bagOfFeatures);
+    void computeWeights(VectorXi const& bagOfWords);
+    void indexize();
 };
