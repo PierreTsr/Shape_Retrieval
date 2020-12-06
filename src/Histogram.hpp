@@ -14,7 +14,9 @@ public:
 
 public:
 
-    Histogram() = default;
+	static Vocabulary vocabulary;
+
+	Histogram() = default;
     Histogram(MatrixXd const& bagOfFeatures);
 
     void setValue(MatrixXd const& bagOfFeatures);
@@ -23,7 +25,6 @@ public:
 
 private:
 
-    static Vocabulary &vocabulary;
     std::map<int, double> weights;
     VectorXi computeCentroids(MatrixXd const& bagOfFeatures);
     void computeWeights(VectorXi const& bagOfWords);

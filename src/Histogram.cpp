@@ -1,5 +1,6 @@
 #include "Histogram.hpp"
 
+
 Histogram::Histogram(MatrixXd const& bagOfFeatures)
 {
     VectorXi words = this->computeCentroids(bagOfFeatures);
