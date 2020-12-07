@@ -1,4 +1,6 @@
 #include <Eigen/Core>
+#include "opencv2/core.hpp"
+#include "opencv2/core/eigen.hpp"
 
 using namespace Eigen;
 
