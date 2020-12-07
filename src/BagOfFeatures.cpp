@@ -9,9 +9,11 @@ using namespace std;
 using namespace Eigen;
 using namespace cv;
 
+
 BagOfFeatures::BagOfFeatures(Mat& _line_rendering, int const _k, int const _kernel_size) : kernel_size(_kernel_size), k(_k)
 {
 	this->line_rendering = _line_rendering;
+
 	this->features = VectorXd::Zero(kernel_size * kernel_size * k);
 
 }
@@ -19,32 +21,76 @@ BagOfFeatures::~BagOfFeatures()
 {
 }
 
+void BagOfFeatures::FourierTransform()
+{
+	line_rendering.convertTo(line_rendering, CV_32F);
+	// expand input image to optimal size
+	Mat padded;
+	int m = getOptimalDFTSize(line_rendering.rows);
+	int n = getOptimalDFTSize(line_rendering.cols);
+	copyMakeBorder(line_rendering, padded, 0, m - line_rendering.rows, 0, n - line_rendering.cols, BORDER_CONSTANT, Scalar::all(0));
+
+	// calculate DFT
+	Mat DFT_image;
+	calculateDFT(padded, DFT_image);
+
+	Mat real, imaginary;
+	Mat planes[] = { real, imaginary };
+
+	split(DFT_image, planes);
+	Mat mag_image;
+	magnitude(planes[0], planes[1], mag_image);
+
+	// switch to a logarithmic scale
+	mag_image += Scalar::all(1);
+	log(mag_image, mag_image);
+	mag_image = mag_image(Rect(0, 0, mag_image.cols & -2, mag_image.rows & -2));
+
+	fftshift(mag_image, fourier_transform);
+
+	normalize(fourier_transform, fourier_transform, 0, 1, NORM_MINMAX);
+
+}
+
+void  BagOfFeatures::calculateDFT(Mat &scr, Mat &dst)
+{
+	// define mat consists of two mat, one for real values and the other for complex values
+	Mat planes[] = { scr, Mat::zeros(scr.size(), CV_32F) };
+	Mat complexImg;
+	merge(planes, 2, complexImg);
+
+	dft(complexImg, complexImg);
+	dst = complexImg;
+}
+
+void  BagOfFeatures::fftshift(const Mat &input_img, Mat &output_img)
+{
+	output_img = input_img.clone();
+	int cx = output_img.cols / 2;
+	int cy = output_img.rows / 2;
+	Mat q1(output_img, Rect(0, 0, cx, cy));
+	Mat q2(output_img, Rect(cx, 0, cx, cy));
+	Mat q3(output_img, Rect(0, cy, cx, cy));
+	Mat q4(output_img, Rect(cx, cy, cx, cy));
+
+	Mat temp;
+	q1.copyTo(temp);
+	q4.copyTo(q1);
+	temp.copyTo(q4);
+	q2.copyTo(temp);
+	q3.copyTo(q2);
+	temp.copyTo(q3);
+
+}
 MatrixXd BagOfFeatures::gabor_computing()
 {
-	int h = getOptimalDFTSize(line_rendering.rows);
-	int w = getOptimalDFTSize(line_rendering.cols);
 
-	cv::Mat dst;
-	cv::Mat fourierTransform;
-
-	//padding
-	copyMakeBorder(line_rendering, dst, 0, h - line_rendering.rows, 0, w - line_rendering.cols, BORDER_CONSTANT, Scalar::all(0));
-	//fourier transform
-	Mat planes[] = {Mat_<float>(dst), Mat::zeros(dst.size(), CV_32F)};
-	Mat complexI;
-	merge(planes, 2, complexI);         // Add to the expanded another plane with zeros
-	dft(complexI, complexI);            // this way the result may fit in the source matrix
-	// compute the magnitude and switch to logarithmic scale
-	// => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
-	split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
-	magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
-	fourierTransform = planes[0];
-
-	for (int i=0;i<k;i++){
+	for (int i = 0; i < k; i++)
+	{
 		Mat filteredFourierTransform;
 		double sig = 1, th = 0, lm = 1.0, gm = 0.02, ps = 0;
 		Mat kernel = cv::getGaborKernel(Size(kernel_size, kernel_size), sig, th, lm, gm, ps);
-		filter2D(fourierTransform, filteredFourierTransform, CV_32F, kernel);
+		filter2D(fourier_transform, filteredFourierTransform, CV_32F, kernel);
 	}
 
 	/*

@@ -17,15 +17,22 @@ using namespace cv;
 class BagOfFeatures
 {
  private :
-	BagOfFeatures(Mat& _line_rendering, const int _k, const int __kernel_size);
-	MatrixXd gabor_computing();
+
 	Mat line_rendering;
+
 	const int kernel_size;
 	const int k;
+
+	MatrixXd gabor_computing();
  public :
 	MatrixXd features;
 
-	BagOfFeatures(Mat _line_rendering, int _k, int _kernel_size);
-	BagOfFeatures();
+	BagOfFeatures() = default;
+	BagOfFeatures(Mat& _line_rendering, const int _k, const int _kernel_size);
 	~BagOfFeatures();
+
+	void fftshift(const Mat& input_img, Mat& output_img);
+	void calculateDFT(Mat& scr, Mat& dst);
+	void FourierTransform();
+	Mat fourier_transform;
 };
