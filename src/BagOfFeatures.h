@@ -11,9 +11,12 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <cmath>
+#include <omp.h>
+
 using namespace std;
 using namespace Eigen;
 using namespace cv;
+
 
 class BagOfFeatures
 {
