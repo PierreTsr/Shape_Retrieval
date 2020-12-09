@@ -9,7 +9,8 @@
 
 #include <Eigen/Eigen>
 #include <opencv2/opencv.hpp>
-
+#include <opencv2/imgproc.hpp>
+#include <cmath>
 using namespace std;
 using namespace Eigen;
 using namespace cv;
@@ -20,19 +21,19 @@ class BagOfFeatures
 
 	Mat line_rendering;
 
-	const int kernel_size;
+	const int gabor_kernel_size;
+	const double tile_size;
+	const double kernel_width;	//fraction of the total image.
 	const int k;
 
-	MatrixXd gabor_computing();
  public :
 	MatrixXd features;
 
 	BagOfFeatures() = default;
-	BagOfFeatures(Mat& _line_rendering, const int _k, const int _kernel_size);
+	BagOfFeatures(Mat& _line_rendering, const int _k, const int _gabor_kernel_size,const int _tile_size,const double _kernel_width);
 	~BagOfFeatures();
 
-	void fftshift(const Mat& input_img, Mat& output_img);
-	void calculateDFT(Mat& scr, Mat& dst);
-	void FourierTransform();
-	Mat fourier_transform;
+	void gabor_computing();
+
+	Mat ApplyFiter(double theta, double sigma_x, double sigma_y, double omega);
 };
