@@ -19,7 +19,7 @@ void TestImageImport()
 
 void TestGaborfilteringTransform()
 {
-	Mat input = imread("../example/mimi.jpg", 0); //grayscale
+	Mat input = imread("../example/m3_15.png", 0); //grayscale
 	BagOfFeatures BoF = BagOfFeatures(input, 4, 5,4,0.5);
 	BoF.gabor_computing();
 }

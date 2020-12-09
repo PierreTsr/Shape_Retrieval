@@ -1,5 +1,4 @@
 build/
 .vscode/
 cmake-build-debug/
-example/
 __pycache__/
