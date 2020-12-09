@@ -2,7 +2,7 @@ import vtk
 import numpy as np
 from math import *
 
-filename = "m400.obj"
+filename = "m700.obj"
 magnificationFactor = 2
 
 def setupPipeline():
@@ -25,6 +25,8 @@ def setupPipeline():
     global ren
     ren = vtk.vtkRenderer()
     ren.SetBackground(0, 0, 0)
+    ren.AddActor(actor)
+    
     global intermediateWindow
     intermediateWindow = vtk.vtkRenderWindow()
     intermediateWindow.AddRenderer(ren)
@@ -35,7 +37,7 @@ def setupPipeline():
     renImage.SetInput(ren)
     renImage.SetMagnification(magnificationFactor)
 
-    ren.AddActor(actor)
+    
 
     #Canny edge detector inspired by
     #https://vtk.org/Wiki/VTK/Examples/Cxx/Images/CannyEdgeDetector
@@ -189,6 +191,7 @@ def runPipeline():
     finalImage.SetInput(edgeRender)
     revImage.SetInputConnection(finalImage.GetOutputPort())
 
+    edgeRender.ResetCamera()
     renderWindow.Render()
     imgWriter.Write()
 
@@ -227,3 +230,8 @@ def getPositionsFromFile(filename):
             directions.append(point)
     directions = np.array(directions)
     return directions
+
+if __name__ == "__main__":
+    setupPipeline()
+    directions = getPositionsFromFile("camera_position.xy")
+    renderMutliplePositions(directions, "output/img")
