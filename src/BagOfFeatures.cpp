@@ -9,99 +9,78 @@ using namespace std;
 using namespace Eigen;
 using namespace cv;
 
-
-BagOfFeatures::BagOfFeatures(Mat& _line_rendering, int const _k, int const _kernel_size) : kernel_size(_kernel_size), k(_k)
+BagOfFeatures::BagOfFeatures(Mat& _line_rendering, int const _k, const int _gabor_kernel_size, int const _tile_size, const double _kernel_width) : gabor_kernel_size(_gabor_kernel_size),
+																																				   tile_size(_tile_size),
+																																				   k(_k),
+																																				   kernel_width(_kernel_width)
 {
-	this->line_rendering = _line_rendering;
-
-	this->features = VectorXd::Zero(kernel_size * kernel_size * k);
+	this->line_rendering = _line_rendering;  //line_rendering needs to be in grayscale
+	this->features = MatrixXd::Zero(tile_size * tile_size * k, 1024);
 
 }
 BagOfFeatures::~BagOfFeatures()
 {
 }
 
-void BagOfFeatures::FourierTransform()
+Mat BagOfFeatures::ApplyFiter(double theta, double sigma_x, double sigma_y, double omega)
 {
-	line_rendering.convertTo(line_rendering, CV_32F);
-	// expand input image to optimal size
-	Mat padded;
-	int m = getOptimalDFTSize(line_rendering.rows);
-	int n = getOptimalDFTSize(line_rendering.cols);
-	copyMakeBorder(line_rendering, padded, 0, m - line_rendering.rows, 0, n - line_rendering.cols, BORDER_CONSTANT, Scalar::all(0));
-
-	// calculate DFT
-	Mat DFT_image;
-	calculateDFT(padded, DFT_image);
-
-	Mat real, imaginary;
-	Mat planes[] = { real, imaginary };
-
-	split(DFT_image, planes);
-	Mat mag_image;
-	magnitude(planes[0], planes[1], mag_image);
-
-	// switch to a logarithmic scale
-	mag_image += Scalar::all(1);
-	log(mag_image, mag_image);
-	mag_image = mag_image(Rect(0, 0, mag_image.cols & -2, mag_image.rows & -2));
-
-	fftshift(mag_image, fourier_transform);
-
-	normalize(fourier_transform, fourier_transform, 0, 1, NORM_MINMAX);
-
+	Mat filtered_line_rendering = Mat(line_rendering.size(), line_rendering.type());
+	double sig = sigma_x;
+	double lm = 2 * M_PI / omega;
+	double gm = sig / sigma_y;
+	double ps = M_PI / 2;
+	Mat kernel1 = cv::getGaborKernel(cv::Size(tile_size, tile_size), sig, theta, lm, gm, ps, CV_64F);
+	filter2D(line_rendering, filtered_line_rendering, CV_64F, kernel1);
+	normalize(filtered_line_rendering, filtered_line_rendering, 255, 0);
+	return (filtered_line_rendering);
 }
 
-void  BagOfFeatures::calculateDFT(Mat &scr, Mat &dst)
-{
-	// define mat consists of two mat, one for real values and the other for complex values
-	Mat planes[] = { scr, Mat::zeros(scr.size(), CV_32F) };
-	Mat complexImg;
-	merge(planes, 2, complexImg);
-
-	dft(complexImg, complexImg);
-	dst = complexImg;
-}
-
-void  BagOfFeatures::fftshift(const Mat &input_img, Mat &output_img)
-{
-	output_img = input_img.clone();
-	int cx = output_img.cols / 2;
-	int cy = output_img.rows / 2;
-	Mat q1(output_img, Rect(0, 0, cx, cy));
-	Mat q2(output_img, Rect(cx, 0, cx, cy));
-	Mat q3(output_img, Rect(0, cy, cx, cy));
-	Mat q4(output_img, Rect(cx, cy, cx, cy));
-
-	Mat temp;
-	q1.copyTo(temp);
-	q4.copyTo(q1);
-	temp.copyTo(q4);
-	q2.copyTo(temp);
-	q3.copyTo(q2);
-	temp.copyTo(q3);
-
-}
-MatrixXd BagOfFeatures::gabor_computing()
+void BagOfFeatures::gabor_computing()
 {
 
-	for (int i = 0; i < k; i++)
+	double sigma_x = line_rendering.cols * 0.02;
+	double sigma_y = sigma_x / 0.3;
+	double omega = 0.13;
+	features.resize(k * tile_size * tile_size, 1024);
+
+	for (int K = 0; K < k; K++)
 	{
-		Mat filteredFourierTransform;
-		double sig = 1, th = 0, lm = 1.0, gm = 0.02, ps = 0;
-		Mat kernel = cv::getGaborKernel(Size(kernel_size, kernel_size), sig, th, lm, gm, ps);
-		filter2D(fourier_transform, filteredFourierTransform, CV_32F, kernel);
+
+		double theta = K * M_PI / k; //in degrees
+		Mat filtered_image = ApplyFiter(theta, sigma_x, sigma_y, omega);
+		for (int i = 0; i < 32; i++)
+		{
+			for (int j = 0; j < 32; j++)
+			{
+				Point2d KeyPoints((int)ceil((i + 1) * filtered_image.cols / (32 + 1)), (int)ceil((j + 1) * filtered_image.rows / (32 + 1)));
+
+				int left_col = (int)max(0.0, floor(KeyPoints.x - kernel_width / 2.0 * filtered_image.cols));
+				int right_col = (int)min((double)filtered_image.cols, ceil(KeyPoints.x + kernel_width / 2.0 * filtered_image.cols));
+				int top_row = (int)max(0.0, floor(KeyPoints.y - kernel_width / 2.0 * filtered_image.rows));
+				int bottom_row = (int)min((double)filtered_image.rows, ceil(KeyPoints.y + kernel_width / 2.0 * filtered_image.rows));
+				cv::Range rows(top_row, bottom_row);
+				cv::Range cols(left_col, right_col);
+				Mat portion_image = filtered_image(rows, cols);
+
+				for (int s = 0; s < tile_size; s++)
+				{
+					for (int t = 0; t < tile_size; t++)
+					{
+						int t_left_col = (int)floor(s * portion_image.cols / tile_size);
+						int t_right_col = (int)ceil((s + 1) * portion_image.cols / tile_size);
+						int t_top_row = (int)floor(s * portion_image.rows / tile_size);
+						int t_bottom_row = (int)ceil((s + 1) * portion_image.rows / tile_size);
+						cv::Range t_rows(t_top_row, t_bottom_row);
+						cv::Range t_cols(t_left_col, t_right_col);
+						cout<<mean(portion_image(t_rows, t_cols))[0]<<endl;
+						features(t+4*s+K*tile_size*tile_size, i+32*j) = mean(portion_image(t_rows, t_cols))[0];
+
+					}
+
+				}
+
+			}
+		}
 	}
 
-	/*
-	idft(complexI, invDFT, DFT_SCALE | DFT_REAL_OUTPUT ); // Applying IDFT
-	invDFT.convertTo(invDFTcvt, CV_8U);
-	imshow("Output", invDFTcvt);
-
-	//show the image
-	imshow("Original Image", img); */
-
-
-
 }
-
