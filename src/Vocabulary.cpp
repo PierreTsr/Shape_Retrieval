@@ -12,7 +12,7 @@ void Vocabulary::setSamples(MatrixXd const& featureSamples, int vocabSize)
     cv::Mat centroids(vocabSize, dim, CV_64F);
     cv::eigen2cv(featureSamples, cvData);
     
-    cv::kmeans(cvData, vocabSize, labels, cvTermCriteria(CV_TERMCRIT_EPS, 10, .1), 10, 0, centroids);
+    cv::kmeans(cvData, vocabSize, labels, cv::TermCriteria(0, 10, .1), 10, 0, centroids);
 
     MatrixXd eigenCentroids(vocabSize, dim);
     cv::cv2eigen(centroids, eigenCentroids);
