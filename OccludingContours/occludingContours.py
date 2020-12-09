@@ -2,7 +2,8 @@ import vtk
 import numpy as np
 from math import *
 
-filename = "m0.obj"
+filename = "m400.obj"
+magnificationFactor = 2
 
 def setupPipeline():
     #read file
@@ -32,7 +33,7 @@ def setupPipeline():
     global renImage
     renImage = vtk.vtkRenderLargeImage()
     renImage.SetInput(ren)
-    renImage.SetMagnification(5)
+    renImage.SetMagnification(magnificationFactor)
 
     ren.AddActor(actor)
 
@@ -99,7 +100,7 @@ def setupPipeline():
     global thresholdEdgels
     thresholdEdgels = vtk.vtkThreshold()
     thresholdEdgels.SetInputConnection(linkImage.GetOutputPort())
-    thresholdEdgels.ThresholdByUpper(20)
+    thresholdEdgels.ThresholdByUpper(10)
     thresholdEdgels.AllScalarsOff()
 
     #filter
@@ -142,7 +143,7 @@ def setupPipeline():
 
     global finalImage
     finalImage = vtk.vtkRenderLargeImage()
-    finalImage.SetMagnification(5)
+    finalImage.SetMagnification(magnificationFactor)
     finalImage.SetInput(edgeRender)
 
     global revImage
@@ -164,7 +165,7 @@ def runPipeline():
 
     renImage = vtk.vtkRenderLargeImage()
     renImage.SetInput(ren)
-    renImage.SetMagnification(5)
+    renImage.SetMagnification(magnificationFactor)
     lumImage.SetInputConnection(renImage.GetOutputPort())
 
     intermediateWindow.Render()
@@ -184,7 +185,7 @@ def runPipeline():
     spe.SetGradMapsData(i2sp.GetOutput())
 
     finalImage = vtk.vtkRenderLargeImage()
-    finalImage.SetMagnification(5)
+    finalImage.SetMagnification(magnificationFactor)
     finalImage.SetInput(edgeRender)
     revImage.SetInputConnection(finalImage.GetOutputPort())
 
@@ -199,10 +200,9 @@ def setOrientation(direction):
     if direction[0] == 0 and direction[2]==0:
         direction[0]= .01
     direction = direction / np.linalg.norm(direction)
-    print(direction)
 
     camera = vtk.vtkCamera()
-    cameraPosition = mapper.GetCenter() + direction * 2 * mapper.GetLength()
+    cameraPosition = mapper.GetCenter() + direction * 2.5 * mapper.GetLength()
     ren.GetActiveCamera().SetPosition(cameraPosition)
     ren.GetActiveCamera().SetFocalPoint(mapper.GetCenter())
 
