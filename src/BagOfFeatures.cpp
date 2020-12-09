@@ -3,6 +3,7 @@
 //
 #include "BagOfFeatures.h"
 #include <opencv2/opencv.hpp>
+#include <omp.h>
 #include <Eigen/src/Core/Matrix.h>
 
 using namespace std;
@@ -42,7 +43,7 @@ void BagOfFeatures::gabor_computing()
 	double sigma_y = sigma_x / 0.3;
 	double omega = 0.13;
 	features.resize(k * tile_size * tile_size, 1024);
-
+	#pragma omp parallel for
 	for (int K = 0; K < k; K++)
 	{
 
@@ -61,7 +62,6 @@ void BagOfFeatures::gabor_computing()
 				cv::Range rows(top_row, bottom_row);
 				cv::Range cols(left_col, right_col);
 				Mat portion_image = filtered_image(rows, cols);
-
 				for (int s = 0; s < tile_size; s++)
 				{
 					for (int t = 0; t < tile_size; t++)
@@ -72,7 +72,6 @@ void BagOfFeatures::gabor_computing()
 						int t_bottom_row = (int)ceil((s + 1) * portion_image.rows / tile_size);
 						cv::Range t_rows(t_top_row, t_bottom_row);
 						cv::Range t_cols(t_left_col, t_right_col);
-						cout<<mean(portion_image(t_rows, t_cols))[0]<<endl;
 						features(t+4*s+K*tile_size*tile_size, i+32*j) = mean(portion_image(t_rows, t_cols))[0];
 
 					}
