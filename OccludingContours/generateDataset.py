@@ -5,8 +5,8 @@ def main(datasetPath, cameraFile):
 
     oc.setupPipeline()
     cameraDirections = oc.getPositionsFromFile(cameraFile)
-    for i in range(0, 1):
-        for j in range(0, 10):
+    for i in range(0, 19):
+        for j in range(0, 100):
             path = datasetPath + "/" + str(i) + "/m" + str(j)
             srcPath = path + "/m" + str(j) + ".obj"
             oc.setSourceFile(srcPath)
