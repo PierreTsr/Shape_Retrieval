@@ -1,4 +1,7 @@
 #include <iostream>
+#include <chrono>
+#include <stdio.h>
+#include <Python.h>
 #include "Histogram.hpp"
 #include "BagOfFeatures.hpp"
 #include "FeatureGenerator.hpp"
@@ -21,23 +24,34 @@ void TestImageImport()
 
 void TestGaborfilteringTransform()
 {
-	Mat input = imread("../example/test2.png", 0); //grayscale
-	BagOfFeatures BoF = BagOfFeatures(input, 4, 5, 4, 0.5);
-
-	high_resolution_clock::time_point t1 = high_resolution_clock::now();
-
-
-	for (int i = 0; i < 100; i++)
-	{
-		cout << i << endl;
-		BoF.gabor_computing();
-	}
-	high_resolution_clock::time_point t2 = high_resolution_clock::now();
-	duration<double, std::milli> time_span = t2 - t1;
-	std::cout << "It took me " << time_span.count()/100 << " milliseconds." << std::endl;
+	Mat input = imread("../example/m3_15.png", 0); //grayscale
+	BagOfFeatures BoF = BagOfFeatures(input);
+	BoF.gabor_computing();
+	imshow("input", input);
+	waitKey(0);
 }
+void draw()
+{
+	char filename[] = "../src/test_draw.py";
+	FILE* fp;
+
+	Py_Initialize();
+
+	fp = _Py_fopen(filename, "r");
+	PyRun_SimpleFile(fp, filename);
+
+	Py_Finalize();
+}
+
 int main()
 {
-	Vocabulary vocab = Vocabulary();
-	buildVocabulary(vocab, 10, 10, N_VIEWS);
+	//TestGaborfilteringTransform();
+	//draw();
+	Mat input = imread("../example/input.jpg", 0); //grayscale
+	BagOfFeatures BoF = BagOfFeatures(input);
+	//BoF.gabor_computing();
+
+	TestGaborfilteringTransform();
+
+	//TODO
 }
