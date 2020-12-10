@@ -1,3 +1,6 @@
+#ifndef SHAPE_RETRIEVAL__VOCABULARY_H_
+#define SHAPE_RETRIEVAL__VOCABULARY_H_
+
 #include <Eigen/Core>
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
@@ -24,3 +27,5 @@ private:
     VectorXd frequencies;
     MatrixXd centroids;
 };
+
+#endif //SHAPE_RETRIEVAL__VOCABULARY_H_

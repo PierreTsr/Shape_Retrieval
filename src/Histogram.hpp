@@ -1,3 +1,6 @@
+#ifndef SHAPE_RETRIEVAL__HISTOGRAM_H_
+#define SHAPE_RETRIEVAL__HISTOGRAM_H_
+
 #include <Eigen/Core>
 #include <map>
 #include <vector>
@@ -29,3 +32,5 @@ private:
     VectorXi computeCentroids(MatrixXd const& bagOfFeatures);
     void computeWeights(VectorXi const& bagOfWords);
 };
+
+#endif //SHAPE_RETRIEVAL__HISTOGRAM_H_
