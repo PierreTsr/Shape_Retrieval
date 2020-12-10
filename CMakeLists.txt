@@ -8,7 +8,7 @@ option(LIBIGL_WITH_OPENGL            "Use OpenGL"         ON)
 option(LIBIGL_WITH_OPENGL_GLFW       "Use GLFW"           ON)
 
 find_package(LIBIGL REQUIRED QUIET)
-find_package( OpenCV REQUIRED )
+find_package( OpenCV REQUIRED PATHS C:/Users/tomma/AppData/Local/OpenCV NO_DEFAULT_PATH)
 find_package( OpenMP )
 find_package( PythonLibs )
 

@@ -47,9 +47,9 @@ int main()
 {
 	//TestGaborfilteringTransform();
 	draw();
-	Mat input = imread("../example/input.jpg", 0); //grayscale
+	Mat input = imread("../example/m1224_59.png", 0); //grayscale
 	BagOfFeatures BoF = BagOfFeatures(input);
-	//BoF.gabor_computing();
+	BoF.gabor_computing();
 
 	//TestGaborfilteringTransform();
 

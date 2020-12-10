@@ -30,6 +30,10 @@ Mat BagOfFeatures::ApplyFiter(double theta, double sigma_x, double sigma_y, doub
 	normalize(filtered_line_rendering, filtered_line_rendering, 255, 0);
 	return (filtered_line_rendering);
 }
+cv::Mat invert_image(cv::Mat const& input)
+{
+	return 1 - input;
+}
 
 void BagOfFeatures::gabor_computing()
 {
@@ -38,20 +42,25 @@ void BagOfFeatures::gabor_computing()
 	double sigma_y = sigma_x / 0.3;
 	double omega = 0.13;
 	features.resize(1024, NB_ORIENTATION * TILE_SIZE * TILE_SIZE);
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int K = 0; K < NB_ORIENTATION; K++)
 	{
 
 		double theta = K * M_PI / NB_ORIENTATION; //in degrees
 		Mat filtered_image = ApplyFiter(theta, sigma_x, sigma_y, omega);
-		/*cv::Mat fg;
+		cv::Mat fg;
 		filtered_image.convertTo(fg,CV_32F);
 		fg = fg + 1;
 		cv::log(fg,fg);
 		cv::normalize(fg,fg,0,255,cv::NORM_MINMAX);
-		cv::convertScaleAbs(fg,fg);
-		cv::imshow("a",fg);
-		waitKey(0);*/
+		//cv::convertScaleAbs(fg,fg);
+		//cv::normalize(filtered_image,filtered_image,0,255,cv::NORM_MINMAX);
+
+		cv::imshow("a",invert_image(filtered_image));
+
+		waitKey(0);
+
+
 		for (int i = 0; i < 32; i++)
 		{
 			for (int j = 0; j < 32; j++)

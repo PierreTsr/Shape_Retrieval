@@ -33,7 +33,7 @@ void collectSamples(MatrixXd &samples, size_t nSamples, size_t nViews)
         srcPath << DATASET_PATH << "/" << to_string(i / 100) << "/m" << to_string(i) << "/render/m" << to_string(i) << "_" << to_string(j) << ".png";
         
         Mat input = imread(srcPath.str(), cv::IMREAD_GRAYSCALE); //grayscale
-        BagOfFeatures BoF = BagOfFeatures(input, 4, 5, 4, 0.2);
+        BagOfFeatures BoF = BagOfFeatures(input);
         BoF.gabor_computing();
 
         samples.row(n) = BoF.features.row(k);
