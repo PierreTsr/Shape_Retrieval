@@ -15,6 +15,7 @@ if( OpenCV_FOUND )
     include_directories( ${OpenCV_INCLUDE_DIRS} )
 endif( OpenCV_FOUND )
 find_package( Boost )
+include_directories(external/dkm)
 
 file(GLOB SRCFILES src/*.cpp)
 add_executable(ex_bin ${SRCFILES})

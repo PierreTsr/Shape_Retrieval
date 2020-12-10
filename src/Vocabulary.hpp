@@ -4,7 +4,16 @@
 #include <Eigen/Core>
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
+#include "../external/dkm/include/dkm.hpp"
+
 using namespace Eigen;
+using namespace std;
+
+#define FEATURE_DIM 64
+
+void eigen2std(const MatrixXd &mat, vector<array<double, FEATURE_DIM>> &vec);
+void std2eigen(const vector<array<double, FEATURE_DIM>> &vec, MatrixXd &mat);
+
 
 class Vocabulary
 {

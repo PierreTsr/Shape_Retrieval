@@ -7,21 +7,45 @@ void Vocabulary::setSamples(MatrixXd const& featureSamples, int vocabSize)
     //calculer la fréquence de chaque mot et update this->frequencies
     
     int nPoints = featureSamples.rows(), dim = featureSamples.cols();
-    cv::Mat cvData(nPoints, dim, CV_64F);
-    cv::Mat labels(nPoints, 1, CV_16U);
-    cv::Mat centroids(vocabSize, dim, CV_64F);
-    cv::eigen2cv(featureSamples, cvData);
-    
-    cv::kmeans(cvData, vocabSize, labels, cv::TermCriteria(0, 10, .1), 10, 0, centroids);
+    vector<array<double,FEATURE_DIM> > features;
+    eigen2std(featureSamples, features);
+
+    auto res = dkm::kmeans_lloyd(features, vocabSize);
+    auto centroids = get<0>(res);
+    auto labels = get<1>(res);
 
     MatrixXd eigenCentroids(vocabSize, dim);
-    cv::cv2eigen(centroids, eigenCentroids);
+    std2eigen(centroids, eigenCentroids);
     this->centroids = eigenCentroids;
 
     this->frequencies = VectorXd::Zero(vocabSize);
     for (int i = 0; i < nPoints; i++)
     {
-        this->frequencies(labels.at<int>(i, 0))++;
+        this->frequencies(labels[i])++;
     }
     this->frequencies = frequencies / nPoints;
+}
+
+void eigen2std(const MatrixXd &mat, vector<array<double, FEATURE_DIM>> &vec)
+{
+    for (size_t i = 0; i < mat.rows(); i++)
+    {
+        array<double, FEATURE_DIM> line;
+        for (size_t j = 0; j < mat.cols(); j++)
+        {
+            line[j] = mat(i, j);
+        }
+        vec.push_back(line);
+    }
+}
+
+void std2eigen(const vector<array<double, FEATURE_DIM>> &vec, MatrixXd &mat)
+{
+    for (size_t i = 0; i < vec.size(); i++)
+    {
+        for (size_t j = 0; j < FEATURE_DIM; j++)
+        {
+            mat(i, j) = vec[i][j];
+        }
+    }
 }

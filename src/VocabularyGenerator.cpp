@@ -19,6 +19,7 @@ void collectSamples(MatrixXd &samples, size_t nSamples, size_t nViews)
     uniform_int_distribution<int> rndModel(0,1814);
     uniform_int_distribution<int> rndView(0,nViews-1);
     uniform_int_distribution<int> rndFeature(0,1023);
+    #pragma omp parallel for
     for (size_t n = 0; n < nSamples; n++)
     {
         int i = rndModel(generator);
@@ -37,6 +38,7 @@ void collectSamples(MatrixXd &samples, size_t nSamples, size_t nViews)
 
         samples.row(n) = BoF.features.row(k);
     }
+    
 }
 
 void saveVocabulary(Vocabulary& vocab)
