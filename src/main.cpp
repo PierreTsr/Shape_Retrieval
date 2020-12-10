@@ -45,12 +45,12 @@ void draw()
 int main()
 {
 	//TestGaborfilteringTransform();
-	//draw();
+	draw();
 	Mat input = imread("../example/input.jpg", 0); //grayscale
 	BagOfFeatures BoF = BagOfFeatures(input);
 	//BoF.gabor_computing();
 
-	TestGaborfilteringTransform();
+	//TestGaborfilteringTransform();
 
 	//TODO
 }
