@@ -5,9 +5,7 @@
 #ifndef SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 #define SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 
-#endif //SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
-
-#include <Eigen/Eigen>
+#include <Eigen/Core>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <cmath>
@@ -40,3 +38,5 @@ class BagOfFeatures
 
 	Mat ApplyFiter(double theta, double sigma_x, double sigma_y, double omega);
 };
+
+#endif //SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_

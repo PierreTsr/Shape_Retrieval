@@ -1,7 +1,7 @@
 //
 // Created by tom on 01/12/2020.
 //
-#include "BagOfFeatures.h"
+#include "BagOfFeatures.hpp"
 #include <opencv2/opencv.hpp>
 #include <Eigen/src/Core/Matrix.h>
 
