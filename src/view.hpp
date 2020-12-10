@@ -1,11 +1,13 @@
 //
 // Created by tom on 09/12/2020.
 //
-#include "BagOfFeatures.h"
-#include "Histogram.hpp"
-#define N_VIEWS 102
+
 #ifndef SHAPE_RETRIEVAL_SRC_VIEW_H_
 #define SHAPE_RETRIEVAL_SRC_VIEW_H_
+
+#include "BagOfFeatures.hpp"
+#include "Histogram.hpp"
+#define N_VIEWS 102
 
 class view
 {

@@ -14,12 +14,15 @@ if( OpenCV_FOUND )
     list( APPEND ThirdParty_LIBS ${OpenCV_LIBS} )
     include_directories( ${OpenCV_INCLUDE_DIRS} )
 endif( OpenCV_FOUND )
+find_package( Boost )
 
 file(GLOB SRCFILES src/*.cpp)
-add_executable(ex_bin ${SRCFILES})
+add_executable(ex_bin ${SRCFILES} src/view.cpp src/view.h)
 
 target_link_libraries( ex_bin ${OpenCV_LIBS} )
 target_link_libraries(ex_bin igl::core igl::opengl_glfw)
 
 target_compile_options(ex_bin PRIVATE ${OpenMP_CXX_FLAGS})
 target_link_libraries(ex_bin  ${OpenMP_CXX_LIBRARIES})
+
+target_link_libraries(ex_bin ${Boost_LIBRARIES})

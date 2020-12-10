@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Histogram.hpp"
-#include "BagOfFeatures.h"
+#include "BagOfFeatures.hpp"
+#include "FeatureGenerator.hpp"
 #include <chrono>
 using namespace chrono;
 using namespace std;
@@ -24,6 +25,7 @@ void TestGaborfilteringTransform()
 
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
+
 	for (int i = 0; i < 100; i++)
 	{
 		cout << i << endl;
@@ -35,6 +37,5 @@ void TestGaborfilteringTransform()
 }
 int main()
 {
-	TestGaborfilteringTransform();
-	return 0;
+	computeDataset("/home/pierre/Documents/INF574/psb_v1/benchmark/db");
 }
