@@ -5,6 +5,11 @@
 #ifndef SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 #define SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 
+#define GABOR_KERNEL_SIZE 5
+#define TILE_SIZE 4
+#define KERNEL_WIDTH 0.2
+#define NB_ORIENTATION 4
+
 #include <Eigen/Core>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -22,16 +27,11 @@ class BagOfFeatures
 
 	Mat line_rendering;
 
-	const int gabor_kernel_size;
-	const double tile_size;
-	const double kernel_width;	//fraction of the total image.
-	const int k;
-
  public :
 	MatrixXd features;
 
-	BagOfFeatures() = default;
-	BagOfFeatures(Mat& _line_rendering, const int _k, const int _gabor_kernel_size,const int _tile_size,const double _kernel_width);
+	BagOfFeatures();
+	BagOfFeatures(Mat& _line_rendering);
 	~BagOfFeatures();
 
 	void gabor_computing();

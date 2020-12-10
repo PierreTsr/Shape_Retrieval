@@ -2,8 +2,8 @@
 // Created by tom on 09/12/2020.
 //
 
-#ifndef SHAPE_RETRIEVAL_SRC_VIEW_H_
-#define SHAPE_RETRIEVAL_SRC_VIEW_H_
+#ifndef SHAPE_RETRIEVAL_SRC_VIEW_HPP_
+#define SHAPE_RETRIEVAL_SRC_VIEW_HPP_
 
 #include "BagOfFeatures.hpp"
 #include "Histogram.hpp"
@@ -12,7 +12,7 @@
 class view
 {
  private :
-	Mat Image[N_VIEWS];
+	array<Mat,N_VIEWS> Image;
 
  public :
 	Histogram Histo[N_VIEWS];
@@ -20,9 +20,9 @@ class view
 	Vocabulary vocab;
 
 	view();
-	view(Mat& _image, Vocabulary& _vocab) ;
+	view(array<Mat,N_VIEWS>& _image, Vocabulary& _vocab) ;
 	void CreateBoF();
 	void CreateHisto();
 };
 
-#endif //SHAPE_RETRIEVAL_SRC_VIEW_H_
+#endif //SHAPE_RETRIEVAL_SRC_VIEW_HPP_

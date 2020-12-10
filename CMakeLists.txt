@@ -17,7 +17,7 @@ endif( OpenCV_FOUND )
 find_package( Boost )
 
 file(GLOB SRCFILES src/*.cpp)
-add_executable(ex_bin ${SRCFILES} src/view.cpp src/view.h)
+add_executable(ex_bin ${SRCFILES} )
 
 target_link_libraries( ex_bin ${OpenCV_LIBS} )
 target_link_libraries(ex_bin igl::core igl::opengl_glfw)
