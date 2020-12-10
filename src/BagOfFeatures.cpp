@@ -1,10 +1,7 @@
 //
 // Created by tom on 01/12/2020.
 //
-#include "BagOfFeatures.h"
-#include <opencv2/opencv.hpp>
-#include <omp.h>
-#include <Eigen/src/Core/Matrix.h>
+#include "BagOfFeatures.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -43,7 +40,7 @@ void BagOfFeatures::gabor_computing()
 	double sigma_y = sigma_x / 0.3;
 	double omega = 0.13;
 	features.resize(k * tile_size * tile_size, 1024);
-	#pragma omp parallel for
+	//#pragma omp parallel for
 	for (int K = 0; K < k; K++)
 	{
 
