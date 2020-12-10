@@ -36,7 +36,7 @@ void computeFeatures(string srcPath)
     string destDir = boost::join(cutPath, "/");
     
     //Compute Feature
-    Mat input = imread("../example/test2.png", cv::IMREAD_GRAYSCALE); //grayscale
+    Mat input = imread(srcPath, cv::IMREAD_GRAYSCALE); //grayscale
 	BagOfFeatures BoF = BagOfFeatures(input, 4, 5, 4, 0.2);
     BoF.gabor_computing();
 

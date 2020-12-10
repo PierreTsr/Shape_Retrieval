@@ -17,6 +17,8 @@ public:
 
     void setSamples(MatrixXd const& featureSamples, int vocabSize);
     void setNViews(int numberOfViews) {this->numberOfViews = numberOfViews; };
+    void setCentroids(MatrixXd const& centroids){this->centroids = centroids; };
+    void setFrequecies(VectorXd const& frequencies){this->frequencies = frequencies; };
     
     int getNumberOfViews() {return this->numberOfViews; };
     VectorXd getFrequecies() {return this->frequencies; }

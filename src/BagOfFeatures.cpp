@@ -7,10 +7,7 @@ using namespace std;
 using namespace Eigen;
 using namespace cv;
 
-BagOfFeatures::BagOfFeatures(Mat& _line_rendering, int const _k, const int _gabor_kernel_size, int const _tile_size, const double _kernel_width) : gabor_kernel_size(_gabor_kernel_size),
-																																				   tile_size(_tile_size),
-																																				   k(_k),
-																																				   kernel_width(_kernel_width)
+BagOfFeatures::BagOfFeatures(Mat& _line_rendering, int const _k, const int _gabor_kernel_size, int const _tile_size, const double _kernel_width) : gabor_kernel_size(_gabor_kernel_size), tile_size(_tile_size), k(_k), kernel_width(_kernel_width)
 {
 	this->line_rendering = _line_rendering;  //line_rendering needs to be in grayscale
 	this->features = MatrixXd::Zero(tile_size * tile_size * k, 1024);

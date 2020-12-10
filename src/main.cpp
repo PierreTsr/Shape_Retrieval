@@ -2,6 +2,7 @@
 #include "Histogram.hpp"
 #include "BagOfFeatures.hpp"
 #include "FeatureGenerator.hpp"
+#include "VocabularyGenerator.hpp"
 #include <chrono>
 using namespace chrono;
 using namespace std;
@@ -36,5 +37,6 @@ void TestGaborfilteringTransform()
 }
 int main()
 {
-	computeDataset("/home/pierre/Documents/INF574/psb_v1/benchmark/db");
+	Vocabulary vocab = Vocabulary();
+	buildVocabulary(vocab, 10, 10, N_VIEWS);
 }
