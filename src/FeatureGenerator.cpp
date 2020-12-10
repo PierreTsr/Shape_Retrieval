@@ -67,21 +67,21 @@ void computeDataset(string datasetPath)
         {
             if (100*1 + j == 762 || 10*i + j > total)
                 continue;
-            stringstream state;
-            state << "Dataset " << 100 * (100*i + j) / total << "% complete" << endl;
-            cout << state.str();
-            stringstream dir;
-            dir << "m" << to_string(100*i+j);
-            srcPath[2] = dir.str();
-            for (size_t k = 0; k < N_VIEWS; k++)
-            {
-                srcPath[3] = "render";
-                stringstream imgName;
-                imgName << "m" << to_string(100*i+j) << "_" << to_string(k) << ".png";
-                srcPath[4] = imgName.str();
-                string path = boost::join(srcPath, "/");
-                computeFeatures(path);
-            }
-        }
-    }
+			stringstream state;
+			state << "Dataset " << 100 * (100*i + j) / total << "% complete" << endl;
+			cout << state.str();
+			stringstream dir;
+			dir << "m" << to_string(100*i+j);
+			srcPath[2] = dir.str();
+			for (size_t k = 0; k < N_VIEWS; k++)
+			{
+				srcPath[3] = "render";
+				stringstream imgName;
+				imgName << "m" << to_string(100*i+j) << "_" << to_string(k) << ".png";
+				srcPath[4] = imgName.str();
+				string path = boost::join(srcPath, "/");
+				computeFeatures(path);
+			}
+		}
+	}
 }

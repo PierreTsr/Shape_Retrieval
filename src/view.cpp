@@ -4,8 +4,6 @@
 
 #include "view.hpp"
 
-/*
-view::view(array<Mat,N_VIEWS>& _image,Vocabulary& _vocab):vocab(_vocab), Image(_image){
-}*/
-void CreateBoF();
-void CreateHisto();
+view::view(Mat& _Image, Vocabulary& _vocab) : vocab(_vocab), Image(_Image), BoF(Image), Histo(BoF.features)
+{
+}

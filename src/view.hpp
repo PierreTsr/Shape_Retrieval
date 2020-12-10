@@ -7,22 +7,20 @@
 
 #include "BagOfFeatures.hpp"
 #include "Histogram.hpp"
-#define N_VIEWS 102
 
 class view
 {
  private :
-	array<Mat,N_VIEWS> Image;
+	Mat Image;
 
  public :
-	Histogram Histo[N_VIEWS];
-	BagOfFeatures set_of_bags[N_VIEWS];
+	BagOfFeatures BoF;
+	Histogram	Histo;
 	Vocabulary vocab;
 
 	view();
-	view(array<Mat,N_VIEWS>& _image, Vocabulary& _vocab) ;
-	void CreateBoF();
-	void CreateHisto();
+	view(Mat& _Image, Vocabulary& _vocab) ;
+
 };
 
 #endif //SHAPE_RETRIEVAL_SRC_VIEW_HPP_

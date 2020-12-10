@@ -24,8 +24,8 @@ Mat BagOfFeatures::ApplyFiter(double theta, double sigma_x, double sigma_y, doub
 	double sig = sigma_x;
 	double lm = 2 * M_PI / omega;
 	double gm = sig / sigma_y;
-	double ps = M_PI / 2;
-	Mat kernel1 = cv::getGaborKernel(cv::Size(TILE_SIZE, TILE_SIZE), sig, theta, lm, gm, ps, CV_64F);
+	double ps = M_PI / 2.0;
+	Mat kernel1 = cv::getGaborKernel(cv::Size(GABOR_KERNEL_SIZE, GABOR_KERNEL_SIZE), sig, theta, lm, gm, ps, CV_64F);
 	filter2D(line_rendering, filtered_line_rendering, CV_64F, kernel1);
 	normalize(filtered_line_rendering, filtered_line_rendering, 255, 0);
 	return (filtered_line_rendering);
@@ -34,7 +34,7 @@ Mat BagOfFeatures::ApplyFiter(double theta, double sigma_x, double sigma_y, doub
 void BagOfFeatures::gabor_computing()
 {
 
-	double sigma_x = line_rendering.cols * 0.02;
+	double sigma_x = 0.01 * line_rendering.cols;
 	double sigma_y = sigma_x / 0.3;
 	double omega = 0.13;
 	features.resize(1024, NB_ORIENTATION * TILE_SIZE * TILE_SIZE);
@@ -44,8 +44,14 @@ void BagOfFeatures::gabor_computing()
 
 		double theta = K * M_PI / NB_ORIENTATION; //in degrees
 		Mat filtered_image = ApplyFiter(theta, sigma_x, sigma_y, omega);
-		imshow("test",filtered_image);
-		waitKey(0	);
+		/*cv::Mat fg;
+		filtered_image.convertTo(fg,CV_32F);
+		fg = fg + 1;
+		cv::log(fg,fg);
+		cv::normalize(fg,fg,0,255,cv::NORM_MINMAX);
+		cv::convertScaleAbs(fg,fg);
+		cv::imshow("a",fg);
+		waitKey(0);*/
 		for (int i = 0; i < 32; i++)
 		{
 			for (int j = 0; j < 32; j++)

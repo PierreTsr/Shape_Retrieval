@@ -5,7 +5,7 @@
 #ifndef SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 #define SHAPE_RETRIEVAL__BAG_OF_FEATURES_H_
 
-#define GABOR_KERNEL_SIZE 5
+#define GABOR_KERNEL_SIZE 11
 #define TILE_SIZE 4
 #define KERNEL_WIDTH 0.2
 #define NB_ORIENTATION 4
@@ -15,6 +15,7 @@
 #include <opencv2/imgproc.hpp>
 #include <cmath>
 #include <omp.h>
+#include <iostream>
 
 using namespace std;
 using namespace Eigen;
