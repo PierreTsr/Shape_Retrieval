@@ -56,32 +56,26 @@ void computeFeatures(string srcPath)
 
 void computeDataset(string datasetPath)
 {
-    array<string, 5> srcPath;
-    srcPath[0] = datasetPath;
     double total = 1815;
     for (size_t i = 0; i < 19; i++)
     {   
-        srcPath[1] = to_string(i);
         #pragma omp parallel for
         for (size_t j = 0; j < 100; j++)
         {
             if (100*1 + j == 762 || 10*i + j > total)
                 continue;
-			stringstream state;
-			state << "Dataset " << 100 * (100*i + j) / total << "% complete" << endl;
-			cout << state.str();
-			stringstream dir;
-			dir << "m" << to_string(100*i+j);
-			srcPath[2] = dir.str();
-			for (size_t k = 0; k < N_VIEWS; k++)
-			{
-				srcPath[3] = "render";
-				stringstream imgName;
-				imgName << "m" << to_string(100*i+j) << "_" << to_string(k) << ".png";
-				srcPath[4] = imgName.str();
-				string path = boost::join(srcPath, "/");
-				computeFeatures(path);
-			}
-		}
-	}
+            stringstream state;
+            state << "Dataset " << 100 * (100*i + j) / total << "% complete" << endl;
+            cout << state.str();
+            stringstream dir;
+            for (size_t k = 0; k < N_VIEWS; k++)
+            {
+                stringstream imgName;
+                imgName << "m" << to_string(100*i+j) << "_" << to_string(k) << ".png";
+                stringstream path;
+                path << datasetPath << "/" << to_string(i) << "/m" << to_string(100*i+j) << "/" << imgName.str();
+                computeFeatures(path.str());
+            }
+        }
+    }
 }

@@ -5,7 +5,8 @@
 #include "Histogram.hpp"
 #include "BagOfFeatures.hpp"
 #include "FeatureGenerator.hpp"
-
+#include "VocabularyGenerator.hpp"
+#include <chrono>
 using namespace chrono;
 using namespace std;
 using namespace cv;
@@ -14,7 +15,7 @@ Vocabulary Histogram::vocabulary = Vocabulary();
 
 void TestImageImport()
 {
-	Mat input = imread("../example/mimi.jpg", 0); //grayscale				values between 0 adn 255
+	Mat input = imread("../example/mimi.jpg", 0); //grayscale values between 0 adn 255
 	assert(input.rows != 0);
 
 	cout << "unit  test : import image OK" << endl;
