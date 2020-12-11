@@ -5,7 +5,7 @@ void computeDataset()
     double total = 1815;
     for (size_t i = 0; i < 1; i++)
     {   
-        #pragma omp parallel for schedule(dynamic, 4)
+        //#pragma omp parallel for schedule(dynamic, 4)
         for (size_t j = 0; j < 100; j++)
         {
             if (100*1 + j == 762 || 10*i + j > total)
@@ -39,7 +39,6 @@ void indexDataset(InverseIndex &index)
                 
                 View v = View();
                 v.setID(100*i+j, k);
-                cout << k << endl;
                 v.indexize(index);
             }
         }

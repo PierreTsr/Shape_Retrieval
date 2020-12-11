@@ -64,7 +64,7 @@ void testAll()
 	View first = View(input);
 	View second = View(input2);
 	double d = first.Histo.distance(second.Histo);
-	std::map<int, double> weights = first.Histo.getWeigths();	
+	std::map<int, double> weights = first.Histo.weights;	
 	cout << "les 2 images sont à une distance de " << d << endl;
 }
 

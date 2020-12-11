@@ -19,15 +19,16 @@ public:
     Histogram(MatrixXd const& bagOfFeatures);
 
     void setValue(MatrixXd const& bagOfFeatures);
-    std::map<int, double> getWeigths(){return weights;};
     void writeToFile(string path);
     void setFromFile(string path);
 
     double distance(Histogram const& hist2);
 
+    std::map<int, double> weights;
+
 private:
 
-    std::map<int, double> weights;
+    
     VectorXi computeCentroids(MatrixXd const& bagOfFeatures);
     void computeWeights(VectorXi const& bagOfWords);
 };

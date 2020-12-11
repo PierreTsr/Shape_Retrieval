@@ -102,14 +102,14 @@ void Histogram::writeToFile(string path)
 
 void Histogram::setFromFile(string path)
 {
-    weights = {};
+    this->weights = {};
     ifstream file;
     file.open(path);
     int idx;
     double weight;
     while (file >> idx && file >> weight)
     {
-        weights[idx] = weight;
+        this->weights[idx] = weight;
     }
     file.close();   
 }

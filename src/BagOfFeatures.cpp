@@ -38,7 +38,7 @@ void BagOfFeatures::gabor_computing()
 	double sigma_y = sigma_x / 0.3;
 	double omega = 0.13;
 	features.resize(1024, NB_ORIENTATION * TILE_SIZE * TILE_SIZE);
-#pragma omp parallel for
+ 	//#pragma omp parallel for
 	for (int K = 0; K < NB_ORIENTATION; K++)
 	{
 
