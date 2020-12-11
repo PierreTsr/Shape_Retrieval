@@ -6,7 +6,9 @@ void Vocabulary::setSamples(MatrixXd const& featureSamples, int vocabSize)
     //placer les centroides dans this->centroids
     //calculer la fréquence de chaque mot et update this->frequencies
     
-    int nPoints = featureSamples.rows(), dim = featureSamples.cols();
+
+    //Obsolète : on utilise maintenant Python pour le clustering
+ /*    int nPoints = featureSamples.rows(), dim = featureSamples.cols();
     vector<array<double,FEATURE_DIM> > features;
     eigen2std(featureSamples, features);
 
@@ -23,7 +25,7 @@ void Vocabulary::setSamples(MatrixXd const& featureSamples, int vocabSize)
     {
         this->frequencies(labels[i])++;
     }
-    this->frequencies = frequencies / nPoints;
+    this->frequencies = frequencies / nPoints; */
 }
 
 void Vocabulary::setVocabFromFile(string vocabPath, size_t vocabSize)

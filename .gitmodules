@@ -1,3 +1,0 @@
-[submodule "external/dkm"]
-	path = external/dkm
-	url = git@github.com:genbattle/dkm.git

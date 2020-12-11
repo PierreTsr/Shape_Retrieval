@@ -48,7 +48,7 @@ void indexDataset(InverseIndex &index)
 void computeAllHistogram()
 {
     double total = 1815;
-    for (size_t i = 14; i < 15; i++)
+    for (size_t i = 8; i < 9; i++)
     {   
         #pragma omp parallel for schedule(dynamic, 2)
         for (size_t j = 0; j < 100; j++)
@@ -81,7 +81,7 @@ void loadAllHistograms(map<tuple<int, int>, View> &dataset)
     omp_lock_t writelock;
     omp_init_lock(&writelock);
     double total = 1815;
-    for (size_t i = 0; i < 1; i++)
+    for (size_t i = 8; i < 9; i++)
     {   
         #pragma omp parallel for schedule(dynamic, 2)
         for (size_t j = 0; j < 100; j++)
@@ -104,6 +104,7 @@ void loadAllHistograms(map<tuple<int, int>, View> &dataset)
                 View v;
                 v.model = model;
                 v.view = view;
+                cout << model << " " << view <<endl;
                 v.Histo.setFromStream(histoFile);
                 omp_set_lock(&writelock);
                 dataset[{model, view}] = v;

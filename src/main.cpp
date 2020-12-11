@@ -33,7 +33,6 @@ void setup()
 void TestImageImport()
 {
 	Mat input = imread("../example/mimi.jpg", 0); //grayscale values between 0 adn 255
-	assert(input.rows != 0);
 
 	cout << "unit  test : import image OK" << endl;
 
@@ -72,12 +71,13 @@ void testAll()
 tuple<int, int> findClosest(Histogram &hist)
 {
 	map<tuple<int, int>, double> bestScores;
-	tuple<int, int> bests[5];
-	int counter = 0;
+	tuple<int, int> bests[10];
+	int counter = 0, truc =0;
 	double maxSim = -1;
 	tuple<int,int> best;	
 	for (auto i = dataset.begin(); i != dataset.end(); i++)
 	{
+		truc++;
 		View v = i->second;
 		double sim = hist.distance(v.Histo);
 		if (sim>maxSim)
@@ -85,7 +85,7 @@ tuple<int, int> findClosest(Histogram &hist)
 			maxSim=sim;
 			best = i->first;
 		}
-		if (counter < 5)
+		if (counter < 10)
 		{
 			bests[counter] = i->first;
 			bestScores.insert({i->first, sim});
@@ -93,22 +93,38 @@ tuple<int, int> findClosest(Histogram &hist)
 		}
 		else
 		{
-			double floor = bestScores.at(bests[4]);
+			double floor = bestScores.at(bests[9]);
 			if (sim > floor)
 			{
-				bests[4] = i->first;
+				bests[9] = i->first;
 				bestScores.insert({i->first, sim});
 			}
 		}
+		if(truc % 1000 == 0)
+			cout << truc << endl;
 		sort(bests, bests + counter, [=](tuple<int,int> a, tuple<int,int> b){
 			return bestScores.at(a) > bestScores.at(b);
 		});
 	}
-	for (size_t i = 0; i < 5; i++)
+	cout << "Comparison done, processing results" << endl;
+	map<int, int> modelScore;
+	for (size_t i = 0; i < 10; i++)
 	{
-		cout << "l'image en position " << i << " est " << get<0>(bests[i]) << "_" << get<1>(bests[i]) << " avec un score de " << bestScores.at(bests[i]) <<endl;
+		if(modelScore.find(get<0>(bests[i])) == modelScore.end())
+		{
+			modelScore[get<0>(bests[i])] = 0;
+		}
+		modelScore[get<0>(bests[i])]++;
 	}
-	
+	for (auto i = modelScore.begin(); i != modelScore.end(); i++)
+	{
+		cout << "le modèle " << i->first << " a un score de " << static_cast<double>(i->second)/10.0 <<endl;
+	}
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << "la vue " << get<0>(bests[i])<<"_"<< get<1>(bests[i])<< " a un score de " << bestScores.at(bests[i]) <<endl;
+	}
 	cout << get<0>(best) << " " << get<1>(best) << endl;
 	return best;
 }
@@ -117,23 +133,18 @@ int main()
 {
 	setup();
 	computeAllHistogram();
-/*  	loadAllHistograms(dataset);
+  	loadAllHistograms(dataset);
 	Py_Initialize();
 	int inp = 1;
 	while(inp)
  	{
 		draw();
 		Mat input = imread("../example/input.jpg", 0); //grayscale
-		View init = View(input);
-		for (auto i = init.Histo.weights.begin(); i != init.Histo.weights.end(); i++)
-		{
-			cout << "La composante " << i->first << " a le poids " << i->second << endl;
-		}
-		
+		View init = View(input);		
 		findClosest(init.Histo);
 		//computeAllHistogram();
 		cin >> inp;
 	}
-	Py_Finalize(); */
+	Py_Finalize();
 	return 0;
 }

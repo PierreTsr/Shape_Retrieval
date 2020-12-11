@@ -7,7 +7,6 @@
 #include <iostream>
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
-#include "../external/dkm/include/dkm.hpp"
 
 using namespace Eigen;
 using namespace std;
