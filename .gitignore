@@ -5,3 +5,6 @@ example/
 __pycache__/
 output/
 samples_full.xy
+backup/
+index.xy
+histogram.xy

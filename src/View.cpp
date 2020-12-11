@@ -54,6 +54,11 @@ void View::writeHistogram()
     Histo.writeToFile(path.str());
 }
 
+void View::writeHistogram(ofstream &file)
+{
+    Histo.writeToFile(file);
+}
+
 void View::indexize(InverseIndex &index)
 {
     for (auto i = Histo.weights.cbegin(); i != Histo.weights.cend(); i++)

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <set>
 #include <stdio.h>
 #include <Python.h>
 #include "Histogram.hpp"
@@ -19,12 +20,14 @@ using namespace cv;
 
 Vocabulary Histogram::vocabulary = Vocabulary();
 InverseIndex viewIndex;
+map<tuple<int,int>, View> dataset;
 
 void setup()
 {
-	Histogram::vocabulary.setVocabFromFile("../data", 2500);
+	Histogram::vocabulary.setVocabFromFile("../backup", 2500);
 	Histogram::vocabulary.setNViews(N_VIEWS * DATASET_SIZE);
 	viewIndex = {};
+	dataset = {};
 }
 
 void TestImageImport()
@@ -49,12 +52,10 @@ void draw()
 	char filename[] = "../src/test_draw.py";
 	FILE* fp;
 
-	Py_Initialize();
-
 	fp = _Py_fopen(filename, "r");
 	PyRun_SimpleFile(fp, filename);
 
-	Py_Finalize();
+
 }
 
 void testAll()
@@ -68,9 +69,71 @@ void testAll()
 	cout << "les 2 images sont à une distance de " << d << endl;
 }
 
+tuple<int, int> findClosest(Histogram &hist)
+{
+	map<tuple<int, int>, double> bestScores;
+	tuple<int, int> bests[5];
+	int counter = 0;
+	double maxSim = -1;
+	tuple<int,int> best;	
+	for (auto i = dataset.begin(); i != dataset.end(); i++)
+	{
+		View v = i->second;
+		double sim = hist.distance(v.Histo);
+		if (sim>maxSim)
+		{
+			maxSim=sim;
+			best = i->first;
+		}
+		if (counter < 5)
+		{
+			bests[counter] = i->first;
+			bestScores.insert({i->first, sim});
+			counter++;
+		}
+		else
+		{
+			double floor = bestScores.at(bests[4]);
+			if (sim > floor)
+			{
+				bests[4] = i->first;
+				bestScores.insert({i->first, sim});
+			}
+		}
+		sort(bests, bests + counter, [=](tuple<int,int> a, tuple<int,int> b){
+			return bestScores.at(a) > bestScores.at(b);
+		});
+	}
+	for (size_t i = 0; i < 5; i++)
+	{
+		cout << "l'image en position " << i << " est " << get<0>(bests[i]) << "_" << get<1>(bests[i]) << " avec un score de " << bestScores.at(bests[i]) <<endl;
+	}
+	
+	cout << get<0>(best) << " " << get<1>(best) << endl;
+	return best;
+}
+
 int main()
 {
 	setup();
-	indexDataset(viewIndex);
+	computeAllHistogram();
+/*  	loadAllHistograms(dataset);
+	Py_Initialize();
+	int inp = 1;
+	while(inp)
+ 	{
+		draw();
+		Mat input = imread("../example/input.jpg", 0); //grayscale
+		View init = View(input);
+		for (auto i = init.Histo.weights.begin(); i != init.Histo.weights.end(); i++)
+		{
+			cout << "La composante " << i->first << " a le poids " << i->second << endl;
+		}
+		
+		findClosest(init.Histo);
+		//computeAllHistogram();
+		cin >> inp;
+	}
+	Py_Finalize(); */
 	return 0;
 }

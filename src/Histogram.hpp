@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <math.h>
+#include <boost/algorithm/string.hpp>
 #include "Vocabulary.hpp"
 
 using namespace Eigen;
@@ -20,7 +21,9 @@ public:
 
     void setValue(MatrixXd const& bagOfFeatures);
     void writeToFile(string path);
+    void writeToFile(ofstream &file);
     void setFromFile(string path);
+    void setFromStream(ifstream &file);
 
     double distance(Histogram const& hist2);
 

@@ -15,10 +15,11 @@ class View
 {
  private :
 	Mat Image;
-	int model;
-	int view;
+
 
  public :
+ 	int model;
+	int view;
 	Histogram	Histo;
 
 	View() = default;
@@ -26,6 +27,7 @@ class View
 	View(Mat& _Image);
 
 	void writeHistogram();
+	void writeHistogram(ofstream &file);
 	void setID(int _model, int _view);
 	void indexize(InverseIndex &index);
 

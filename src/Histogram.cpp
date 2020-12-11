@@ -100,6 +100,14 @@ void Histogram::writeToFile(string path)
     file.close();    
 }
 
+void Histogram::writeToFile(ofstream &file)
+{
+    for (auto i = weights.cbegin(); i != weights.cend(); i++)
+    {
+        file << i->first << " " << i->second << endl;
+    }
+}
+
 void Histogram::setFromFile(string path)
 {
     this->weights = {};
@@ -112,4 +120,18 @@ void Histogram::setFromFile(string path)
         this->weights[idx] = weight;
     }
     file.close();   
+}
+
+void Histogram::setFromStream(ifstream &file)
+{
+    string line;
+    getline(file, line);
+    while (line.compare("===END===") != 0)
+    {
+        vector<string> tmp;
+        boost::split(tmp, line, boost::is_any_of(" "));
+        assert(tmp.size() == 2);
+        weights[atoi(tmp[0].c_str())] = stod(tmp[1]);
+        getline(file, line);
+    }
 }
