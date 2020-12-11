@@ -13,16 +13,15 @@ class Histogram
 {
 public:
 
-    using index = std::map<int, std::vector<Histogram>>;
-
-public:
-
 	static Vocabulary vocabulary;
 
 	Histogram() = default;
     Histogram(MatrixXd const& bagOfFeatures);
 
     void setValue(MatrixXd const& bagOfFeatures);
+    std::map<int, double> getWeigths(){return weights;};
+    void writeToFile(string path);
+    void setFromFile(string path);
 
     double distance(Histogram const& hist2);
 

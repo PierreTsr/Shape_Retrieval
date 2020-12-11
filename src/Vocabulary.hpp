@@ -2,6 +2,9 @@
 #define SHAPE_RETRIEVAL__VOCABULARY_H_
 
 #include <Eigen/Core>
+#include <fstream>
+#include <cstdlib>
+#include <iostream>
 #include "opencv2/core.hpp"
 #include "opencv2/core/eigen.hpp"
 #include "../external/dkm/include/dkm.hpp"
@@ -28,6 +31,7 @@ public:
     void setNViews(int numberOfViews) {this->numberOfViews = numberOfViews; };
     void setCentroids(MatrixXd const& centroids){this->centroids = centroids; };
     void setFrequecies(VectorXd const& frequencies){this->frequencies = frequencies; };
+    void setVocabFromFile(string vocabPath, size_t vocabSize);
     
     int getNumberOfViews() {return this->numberOfViews; };
     VectorXd getFrequecies() {return this->frequencies; }

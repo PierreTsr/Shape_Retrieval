@@ -2,10 +2,20 @@
 
 using namespace std;
 
+
+void buildSample( size_t nSamples,size_t nViews)
+{
+    MatrixXd samples;
+    collectSamples(samples, nSamples, nViews);
+    saveSamples(samples);
+
+}
+
 void buildVocabulary(Vocabulary &vocab, size_t nSamples, size_t vocabSize, size_t nViews)
 {
     MatrixXd samples;
     collectSamples(samples, nSamples, nViews);
+    saveSamples(samples);
     vocab.setSamples(samples, vocabSize);
     vocab.setNViews(nViews);
     saveVocabulary(vocab);
@@ -19,9 +29,12 @@ void collectSamples(MatrixXd &samples, size_t nSamples, size_t nViews)
     uniform_int_distribution<int> rndModel(0,1814);
     uniform_int_distribution<int> rndView(0,nViews-1);
     uniform_int_distribution<int> rndFeature(0,1023);
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic, 16)
     for (size_t n = 0; n < nSamples; n++)
     {
+        stringstream status;
+        status << "Sampling " << 100.0 * n / nSamples << "% completed" << endl;
+        cout << status.str();
         int i = rndModel(generator);
         while (i == 762)
         {
@@ -60,4 +73,15 @@ void saveVocabulary(Vocabulary& vocab)
         frequenciesFile << frequencies.row(i) << endl;
     }
     frequenciesFile.close();
+}
+
+void saveSamples(MatrixXd &samples)
+{
+    ofstream samplesFile;
+    samplesFile.open("../data/samples_full.xy");
+    for (size_t i = 0; i < samples.rows(); i++)
+    {
+        samplesFile << samples.row(i) << endl;
+    }
+    samplesFile.close();
 }

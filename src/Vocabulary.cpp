@@ -26,6 +26,39 @@ void Vocabulary::setSamples(MatrixXd const& featureSamples, int vocabSize)
     this->frequencies = frequencies / nPoints;
 }
 
+void Vocabulary::setVocabFromFile(string vocabPath, size_t vocabSize)
+{
+    stringstream centroidPath;
+    centroidPath << vocabPath << "/centroids.xy";
+    ifstream centroidFile;
+    centroidFile.open(centroidPath.str());
+    vector<array <double, FEATURE_DIM>> stdCentroids;
+    for (size_t i = 0; i < vocabSize; i++)
+    {
+        array <double, FEATURE_DIM> line;
+        for (size_t j = 0; j < FEATURE_DIM; j++)
+        {
+            centroidFile >> line[j];
+        }
+        stdCentroids.push_back(line);
+    }
+    centroidFile.close();
+    this->centroids = MatrixXd(vocabSize, FEATURE_DIM);
+    std2eigen(stdCentroids, this->centroids);
+
+    stringstream frequenciesPath;
+    frequenciesPath << vocabPath << "/frequencies.xy";
+    ifstream frequenciesFile;
+    frequenciesFile.open(frequenciesPath.str());
+    this->frequencies = VectorXd(vocabSize);
+    for (size_t i = 0; i < vocabSize; i++)
+    {
+        frequenciesFile >> this->frequencies(i);
+    }
+    frequenciesFile.close();
+    
+}
+
 void eigen2std(const MatrixXd &mat, vector<array<double, FEATURE_DIM>> &vec)
 {
     for (size_t i = 0; i < mat.rows(); i++)

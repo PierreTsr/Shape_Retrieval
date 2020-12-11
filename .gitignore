@@ -4,3 +4,4 @@ cmake-build-debug/
 example/
 __pycache__/
 output/
+samples_full.xy

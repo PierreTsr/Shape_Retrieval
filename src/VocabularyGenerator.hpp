@@ -18,7 +18,11 @@
 
 void buildVocabulary(Vocabulary &vocab, size_t nSamples, size_t vocabSize, size_t nViews);
 
+void buildSample( size_t nSamples,size_t nViews);
+
 void collectSamples(MatrixXd &samples, size_t vocabSize, size_t nViews);
+
+void saveSamples(MatrixXd &samples);
 
 void saveVocabulary(Vocabulary& vocab);
 

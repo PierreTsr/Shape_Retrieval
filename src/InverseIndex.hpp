@@ -6,8 +6,6 @@
 
 using namespace std;
 
-struct View{};
-
-typedef map<int, vector<View>> InverseIndex;
+typedef map<int, vector<tuple<int, int>>> InverseIndex;
 
 #endif //SHAPE_RETRIEVAL__INVERSE_INDEX_H_

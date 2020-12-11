@@ -43,6 +43,8 @@ void Histogram::computeWeights(VectorXi const& bagOfWords)
     for (size_t i = 0; i < bagOfWords.rows(); i++)
     {
         int wordIndex = bagOfWords(i);
+        if(wordIndex == 1)
+            continue;
         if(rawHistogram.find(wordIndex) == rawHistogram.end())
         {
             rawHistogram[wordIndex] = 1;
@@ -53,12 +55,17 @@ void Histogram::computeWeights(VectorXi const& bagOfWords)
         }
     }
 
+/*     for (auto i = rawHistogram.cbegin(); i != rawHistogram.cend(); i++)
+    {
+        cout << "la feature " << i->first << " apparaît " << i->second << " fois" << endl;
+    } */
+
     int numberOfViews = this->vocabulary.getNumberOfViews();
     VectorXd vocabFrequencies = this->vocabulary.getFrequecies();
     this->weights = {};
     for (auto& item: rawHistogram)
     {
-        weights[item.first] = item.second / bagOfWords.rows() * log(numberOfViews / vocabFrequencies(item.first));
+        weights[item.first] =  log(numberOfViews / vocabFrequencies(item.first)) * static_cast<double>(item.second) / static_cast<double>(bagOfWords.rows());
     }
 };
 
@@ -80,4 +87,29 @@ double Histogram::distance(Histogram const& hist2)
     normHist1 = sqrt(normHist1);
     normHist2 = sqrt(normHist2);
     return dotProduct / (normHist1 * normHist2);
+}
+
+void Histogram::writeToFile(string path)
+{
+    ofstream file;
+    file.open(path);
+    for (auto i = weights.cbegin(); i != weights.cend(); i++)
+    {
+        file << i->first << " " << i->second << endl;
+    }
+    file.close();    
+}
+
+void Histogram::setFromFile(string path)
+{
+    weights = {};
+    ifstream file;
+    file.open(path);
+    int idx;
+    double weight;
+    while (file >> idx && file >> weight)
+    {
+        weights[idx] = weight;
+    }
+    file.close();   
 }
