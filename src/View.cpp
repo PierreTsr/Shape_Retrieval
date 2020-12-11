@@ -58,11 +58,15 @@ void View::indexize(InverseIndex &index)
 {
     for (auto i = Histo.getWeigths().cbegin(); i != Histo.getWeigths().cend(); i++)
     {
-        if(index.find(i->first) == index.cend())
+        if(index.find(i->first) == index.end())
         {
-            index[i->first] = {};
+            vector<tuple<int, int>> init = {};
+            index.insert({i->first, init});
         }
-        index[i->first].push_back({model, view});
+        cout << 1 <<endl;
+        cout<< index[i->first].size() <<endl;
+        cout << 2 << endl;
+        index.at(i->first).push_back({model, view});
     }
 }
 
